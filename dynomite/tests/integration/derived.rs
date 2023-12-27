@@ -10,15 +10,10 @@ pub struct Author {
     name: String,
 }
 
-#[derive(Attribute, PartialEq, Debug, Clone)]
+#[derive(Attribute, PartialEq, Debug, Default, Clone)]
 pub enum Category {
+    #[default]
     Foo,
-}
-
-impl Default for Category {
-    fn default() -> Self {
-        Category::Foo
-    }
 }
 
 #[derive(Item, Default, PartialEq, Debug, Clone)]
