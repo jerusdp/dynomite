@@ -1,2 +1,3 @@
 [workspace]
 members = ["dynomite", "dynomite-derive"]
+resolver = "2"

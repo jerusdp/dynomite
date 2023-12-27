@@ -1,4 +1,4 @@
-use dynomite::{Attributes};
+use dynomite::Attributes;
 
 #[derive(Attributes)]
 struct Test1 {

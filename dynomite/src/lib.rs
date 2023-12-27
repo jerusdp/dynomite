@@ -683,7 +683,7 @@ impl<T: IntoAttributes + FromAttributes> Attribute for T {
 impl Attribute for Uuid {
     fn into_attr(self) -> AttributeValue {
         AttributeValue {
-            s: Some(self.to_hyphenated().to_string()),
+            s: Some(self.hyphenated().to_string()),
             ..AttributeValue::default()
         }
     }
@@ -1139,9 +1139,10 @@ mod test {
     #[cfg(feature = "chrono")]
     fn chrono_datetime_fixedoffset_attr() {
         use chrono::offset::TimeZone;
-        let value = FixedOffset::east(5 * 3600)
-            .ymd(2015, 2, 18)
-            .and_hms(23, 16, 9);
+        let value = FixedOffset::east_opt(5 * 3600)
+            .unwrap()
+            .with_ymd_and_hms(2015, 2, 18, 23, 16, 9)
+            .unwrap();
         assert_eq!(
             Ok(value),
             DateTime::<FixedOffset>::from_attr(value.into_attr())

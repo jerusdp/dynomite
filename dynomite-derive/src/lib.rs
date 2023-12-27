@@ -35,7 +35,7 @@ use attr::{EnumAttr, EnumAttrKind, FieldAttr, FieldAttrKind, VariantAttr};
 
 use proc_macro::TokenStream;
 use proc_macro2::Span;
-use proc_macro_error::{abort, ResultExt};
+use proc_macro_error::abort;
 use quote::{quote, ToTokens};
 use syn::{
     parse::Parse, punctuated::Punctuated, Attribute, DataStruct, DeriveInput, Field, Fields, Ident,
@@ -49,6 +49,7 @@ struct Variant {
 
 impl Variant {
     fn deser_name(&self) -> String {
+        #[allow(clippy::unnecessary_find_map)]
         self.attrs
             .iter()
             .find_map(|it| match &it.kind {
@@ -99,6 +100,7 @@ impl DataEnum {
     }
 
     fn tag_key(&self) -> String {
+        #[allow(clippy::unnecessary_find_map)]
         self.attrs
             .iter()
             .find_map(|attr| match &attr.kind {
@@ -293,7 +295,8 @@ fn parse_attrs<A: Parse>(all_attrs: &[Attribute]) -> Vec<A> {
         .filter(|attr| is_dynomite_attr(attr))
         .flat_map(|attr| {
             attr.parse_args_with(Punctuated::<A, Token![,]>::parse_terminated)
-                .unwrap_or_abort()
+                // .unwrap_or_abort()
+                .unwrap()
         })
         .collect()
 }
@@ -813,5 +816,5 @@ fn get_key_struct(
 }
 
 fn is_dynomite_attr(suspect: &syn::Attribute) -> bool {
-    suspect.path.is_ident("dynomite")
+    suspect.path().is_ident("dynomite")
 }
